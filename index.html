@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cajitas Bebé">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#e8f7ff">
+<title>Cajitas flotantes de sorpresas</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:"Trebuchet MS",Arial,sans-serif;color:#604c66;background:#202638;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+button{font:inherit;border:0;cursor:pointer;-webkit-appearance:none;appearance:none;touch-action:manipulation}
+#app{height:100vh;display:flex;flex-direction:column;padding:10px;gap:8px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0;padding:2px 5px}
+h1{font-size:28px;margin:0;color:#e5c9f2}
+#subtitle{font-size:15px;color:#d2c7e0;text-align:right}
+#stage{position:relative;flex:1;min-height:0;overflow:hidden;border-radius:27px;background:linear-gradient(180deg,#273b57 0%,#30364e 50%,#44344f 100%);box-shadow:inset 0 -7px 0 rgba(137,173,211,.13)}
+.cloud{position:absolute;font-size:55px;opacity:.78;pointer-events:none;animation:cloud 5s ease-in-out infinite alternate}
+.c1{left:5%;top:7%}.c2{right:7%;top:13%;animation-delay:-2s}.c3{left:13%;bottom:7%;animation-delay:-1s}
+#hint{position:absolute;left:50%;top:5%;transform:translateX(-50%);font-weight:bold;font-size:21px;background:#303448e8;border-radius:22px;padding:9px 17px;white-space:nowrap;z-index:2;box-shadow:0 3px 0 #252a3b}
+.gift{position:absolute;z-index:3;width:105px;height:115px;background:transparent;display:flex;align-items:center;justify-content:center;font-size:85px;line-height:1;filter:drop-shadow(0 7px 3px #00000055);animation:float 3s ease-in-out infinite;transition:transform .18s}
+.gift:active{transform:scale(.9)}
+.gift:nth-of-type(2){animation-delay:-.7s}.gift:nth-of-type(3){animation-delay:-1.4s}.gift:nth-of-type(4){animation-delay:-.3s}.gift:nth-of-type(5){animation-delay:-1.8s}.gift:nth-of-type(6){animation-delay:-1s}
+.gift.opening{animation:openGift .42s ease forwards;pointer-events:none}
+#reveal{position:absolute;z-index:5;left:50%;top:48%;transform:translate(-50%,-50%);display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;text-align:center;pointer-events:none;width:90%}
+#reveal.show{display:flex;animation:pop .6s cubic-bezier(.17,.89,.32,1.5) both}
+#revealEmoji{font-size:150px;line-height:1;filter:drop-shadow(0 7px 0 #00000055)}
+#revealText{background:#34394e;border-radius:23px;padding:9px 18px;font-size:clamp(20px,3.5vw,30px);font-weight:bold;box-shadow:0 4px 0 #252a3b;color:#f0e6f5}
+#particles{position:absolute;inset:0;z-index:6;overflow:hidden;pointer-events:none}
+.particle{position:absolute;font-size:32px;animation:burst 1.1s ease-out forwards}
+#bottom{display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0}
+.small{background:#34394e;border-radius:16px;padding:10px 15px;box-shadow:0 3px 0 #d9d9ed;color:#f0e6f5;font-weight:bold;font-size:15px}
+#again{background:#594057}
+@keyframes float{0%,100%{margin-top:0;transform:rotate(-4deg)}50%{margin-top:-13px;transform:rotate(4deg)}}
+@keyframes cloud{from{transform:translateX(-6px)}to{transform:translateX(9px)}}
+@keyframes openGift{0%{transform:scale(1) rotate(0)}45%{transform:scale(1.25) rotate(-12deg)}100%{transform:scale(.1) rotate(25deg);opacity:0}}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,-40%) scale(.15) rotate(-15deg)}65%{opacity:1;transform:translate(-50%,-53%) scale(1.12) rotate(6deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+@keyframes burst{0%{opacity:0;transform:translate(0,0) scale(.2)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.1) rotate(var(--rot))}}
+@media(max-width:520px){#app{padding:7px;gap:6px}#stage{border-radius:20px}.small{padding:9px 12px}}
+@media(orientation:landscape) and (max-height:500px){#app{padding:5px;gap:4px}header h1{font-size:21px}#subtitle{font-size:12px}#hint{top:3%;font-size:16px;padding:5px 12px}.gift{width:85px;height:90px;font-size:70px}#revealEmoji{font-size:105px}#revealText{font-size:18px;padding:5px 12px}.small{padding:5px 10px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><h1>🎁 Cajitas mágicas</h1><div id="subtitle">¡Toca una y descubre! ✨</div></header>
+<main id="stage" aria-label="Cajitas flotantes">
+<div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="cloud c3">☁️</div>
+<div id="hint">¿Qué habrá dentro? 💫</div>
+<button class="gift" style="left:7%;top:25%" aria-label="Abrir cajita">🎁</button>
+<button class="gift" style="left:35%;top:20%" aria-label="Abrir cajita">🎀</button>
+<button class="gift" style="right:7%;top:27%" aria-label="Abrir cajita">🎁</button>
+<button class="gift" style="left:17%;top:59%" aria-label="Abrir cajita">🎁</button>
+<button class="gift" style="left:48%;top:57%" aria-label="Abrir cajita">🎀</button>
+<button class="gift" style="right:12%;top:59%" aria-label="Abrir cajita">🎁</button>
+<div id="reveal"><div id="revealEmoji">🐶</div><div id="revealText">¡Guau, guau!</div></div>
+<div id="particles"></div>
+</main>
+<footer id="bottom">
+<button class="small" id="sound">🔔 Sonido sí</button>
+<button class="small" id="again">🎁 ¡Más cajitas!</button>
+</footer>
+</div>
+<script>
+(function(){
+var stage=document.getElementById('stage'), reveal=document.getElementById('reveal'), revealEmoji=document.getElementById('revealEmoji'), revealText=document.getElementById('revealText'), particles=document.getElementById('particles');
+var soundOn=true, timer=null, lastKind=-1;
+var surprises=[
+['🐶','¡Guau, guau!'],['🐱','¡Miau, miau!'],['🐸','¡Croac, croac!'],['🐥','¡Pío, pío!'],['🐰','¡Hop, hop!'],['🐵','¡Hola, amiguito!'],['🦁','¡Rooaar!'],['🐼','¡Qué lindo!'],['🐮','¡Muuu!'],['🐷','¡Oinc, oinc!'],
+['🍎','¡Una manzana!'],['🍌','¡Un plátano!'],['🍓','¡Una fresa!'],['🍉','¡Sandía!'],['🍍','¡Piña dulce!'],['🍊','¡Una naranja!'],['🍇','¡Uvas!'],['🍐','¡Una pera!'],['🥭','¡Un mango!'],
+['⭐','¡Estrella brillante!'],['🌈','¡Un arcoíris!'],['🌙','¡Hola, lunita!'],['☀️','¡Hola, sol!'],['🌸','¡Una florecita!'],['🦋','¡Mariposa!'],['💖','¡Un corazón!'],['✨','¡Magia, magia!'],['🌟','¡Brilla, brilla!']
+];
+var party=['✨','⭐','💖','🌟','🎉','🌸','🎈','🫧'];
+function tone(freq){if(!soundOn)return;try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!window._boxAudio)window._boxAudio=new AC();var a=window._boxAudio;if(a.state==='suspended'&&a.resume)a.resume();var o=a.createOscillator(),g=a.createGain(),t=a.currentTime;o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.05,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+.24);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.25)}catch(e){}}
+function burst(){particles.innerHTML='';var w=stage.clientWidth,h=stage.clientHeight;for(var i=0;i<20;i++){var p=document.createElement('span');p.className='particle';p.textContent=party[Math.floor(Math.random()*party.length)];p.style.left=(w*.5+(Math.random()-.5)*w*.25)+'px';p.style.top=(h*.47+(Math.random()-.5)*h*.16)+'px';p.style.setProperty('--dx',((Math.random()-.5)*w*.85)+'px');p.style.setProperty('--dy',((Math.random()-.5)*h*.8)+'px');p.style.setProperty('--rot',((Math.random()-.5)*360)+'deg');particles.appendChild(p)}setTimeout(function(){particles.innerHTML=''},1200)}
+function resetBoxes(){var gifts=document.querySelectorAll('.gift');for(var i=0;i<gifts.length;i++){gifts[i].style.display='flex';gifts[i].className='gift';}reveal.className='';particles.innerHTML='';document.getElementById('hint').textContent='¿Qué habrá dentro? 💫';}
+function openBox(btn){if(btn.className.indexOf('opening')!==-1)return;var gifts=document.querySelectorAll('.gift');for(var i=0;i<gifts.length;i++){gifts[i].style.display='none';}btn.style.display='flex';btn.className='gift opening';
+var n=Math.floor(Math.random()*surprises.length);if(surprises.length>1&&n===lastKind)n=(n+1)%surprises.length;lastKind=n;
+var item=surprises[n];revealEmoji.textContent=item[0];revealText.textContent=item[1];reveal.className='show';document.getElementById('hint').textContent='¡Sorpresa! 🎉';burst();tone([523,659,784,880][n%4]);
+if(timer)clearTimeout(timer);timer=setTimeout(function(){resetBoxes()},2400);
+}
+var gifts=document.querySelectorAll('.gift');for(var i=0;i<gifts.length;i++){gifts[i].addEventListener('click',function(){openBox(this)});}
+document.getElementById('again').addEventListener('click',function(){if(timer)clearTimeout(timer);resetBoxes();tone(660)});
+document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;this.textContent=soundOn?'🔔 Sonido sí':'🔕 Sonido no';if(soundOn)tone(700)});
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

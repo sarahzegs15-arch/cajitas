@@ -1,0 +1,17 @@
+CAJITAS FLOTANTES DE SORPRESAS — versión para iPad
+
+CONTENIDO
+- index.html: juego
+- manifest.json e iconos: instalación como app web
+- sw.js: permite guardar los archivos para uso sin conexión después de abrirlo una vez con internet
+
+CÓMO PUBLICARLO EN GITHUB PAGES
+1. Descomprime este ZIP en tu computadora.
+2. Sube los archivos de esta carpeta al repositorio de GitHub.
+3. Si ya tienes otro juego en la raíz del repositorio, NO reemplaces su index.html si quieres conservarlo. Puedes usar un repositorio separado para este juego.
+4. Abre la dirección publicada en Safari en el iPad con internet y espera a que cargue.
+5. Pulsa Compartir > Añadir a pantalla de inicio.
+6. Abre la app una vez; después prueba el modo avión para comprobar que funciona sin conexión.
+
+NOTA
+La versión usa estilos compatibles con Safari antiguo y un fondo oscuro. El funcionamiento sin conexión requiere que GitHub Pages esté publicado y que el juego se haya cargado al menos una vez con internet.
